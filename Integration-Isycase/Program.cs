@@ -17,18 +17,22 @@ namespace IntegrationIsycase
     {
         public static void Main()
         {
+            var alertUrl = Environment.GetEnvironmentVariable("ALERT_URL");
+            var apiKey = Environment.GetEnvironmentVariable("API_KEY");
+            var baseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+            
             while (true)
             {
-                GetDeviceStatus().Wait();
+                GetDeviceStatus(baseUrl, alertUrl, apiKey).Wait();
                 Task.Delay(5000).Wait();
             }
         }
 
         private static Dictionary<string, string> deviceStatus = new Dictionary<string, string>();
         private static HttpClient client = new HttpClient();
-        private static async Task GetDeviceStatus()
+        private static async Task GetDeviceStatus(string baseUrl, string alertUrl, string apiKey)
         {
-            var url = "https://iotsundsvall.se/ngsi-ld/v1/entities?type=Device";
+            var url = baseUrl + "/ngsi-ld/v1/entities?type=Device";
             string data = await client.GetStringAsync(url);
 
             List<Device> devices = JsonConvert.DeserializeObject<List<Device>>(data);
@@ -41,14 +45,14 @@ namespace IntegrationIsycase
                     {
                         Console.WriteLine("Skicka felrapport för " + device.Id);
                         //Post to kommunen/isycase
-                        await PostAlert(device, url);
+                        await PostAlert(device, alertUrl, apiKey);
                     }
                 }
                 deviceStatus[device.Id] = device.Value.Value;
             }
         }
 
-        private static async Task PostAlert(Device device, string url)
+        private static async Task PostAlert(Device device, string alertUrl, string apiKey)
         {
             var alert = new AlertMissingLifebuoy(device.Id, 17.320790, 62.389976);
 
@@ -60,8 +64,6 @@ namespace IntegrationIsycase
 
             var json = JsonConvert.SerializeObject(alert, settings);
             var data = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var alertUrl = Environment.GetEnvironmentVariable("ALERT_URL");
-            var apiKey = Environment.GetEnvironmentVariable("API_KEY");
 
             Console.WriteLine(json);
 
