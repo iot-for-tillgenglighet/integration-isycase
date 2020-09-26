@@ -14,4 +14,4 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 WORKDIR /app
 COPY --from=publish /app/Integration-Isycase/out ./
 EXPOSE 80
-ENTRYPOINT ["dotnet", "Integration-Isycase.dll"]
+ENTRYPOINT ["dotnet", "IntegrationIsycase.dll"]
