@@ -60,13 +60,14 @@ namespace IntegrationIsycase
 
             var json = JsonConvert.SerializeObject(alert, settings);
             var data = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var url = Environment.GetEnvironmentVariable("alertUrl");
+            var alertUrl = Environment.GetEnvironmentVariable("ALERT_URL");
+            var apiKey = Environment.GetEnvironmentVariable("API_KEY");
 
             Console.WriteLine(json);
 
             var formContent = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("apiKey", Environment.GetEnvironmentVariable("apiKey")),
+                new KeyValuePair<string, string>("apiKey", apiKey),
                 new KeyValuePair<string, string>("alertJsonString", json)
             });
             
