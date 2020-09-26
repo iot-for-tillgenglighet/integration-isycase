@@ -20,7 +20,7 @@ namespace IntegrationIsycase
             while (true)
             {
                 GetDeviceStatus().Wait();
-                Task.Delay(2000).Wait();
+                Task.Delay(5000).Wait();
             }
         }
 
@@ -60,13 +60,13 @@ namespace IntegrationIsycase
 
             var json = JsonConvert.SerializeObject(alert, settings);
             var data = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var alertUrl = "";
+            var url = Environment.GetEnvironmentVariable("alertUrl");
 
             Console.WriteLine(json);
 
             var formContent = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("apiKey", ""),
+                new KeyValuePair<string, string>("apiKey", Environment.GetEnvironmentVariable("apiKey")),
                 new KeyValuePair<string, string>("alertJsonString", json)
             });
             
