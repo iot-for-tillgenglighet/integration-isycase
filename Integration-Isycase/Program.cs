@@ -17,9 +17,15 @@ namespace IntegrationIsycase
     {
         public static void Main()
         {
+            var baseUrl = Environment.GetEnvironmentVariable("BASE_URL");
             var alertUrl = Environment.GetEnvironmentVariable("ALERT_URL");
             var apiKey = Environment.GetEnvironmentVariable("API_KEY");
-            var baseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+
+            if (alertUrl == "" || apiKey == "" || baseUrl == "")
+            {
+                Console.WriteLine("Environment variables BASE_URL, ALERT_URL and API_KEY must be set.");
+                System.Environment.Exit(1);
+            }
             
             while (true)
             {
@@ -44,7 +50,6 @@ namespace IntegrationIsycase
                     if (!deviceStatus.ContainsKey(device.Id) || deviceStatus[device.Id] == "on")
                     {
                         Console.WriteLine("Skicka felrapport för " + device.Id);
-                        //Post to kommunen/isycase
                         await PostAlert(device, alertUrl, apiKey);
                     }
                 }
