@@ -29,6 +29,7 @@ namespace IntegrationIsycase
             
             while (true)
             {
+                Console.WriteLine("Polling for device status ...");
                 GetDeviceStatus(baseUrl, alertUrl, apiKey).Wait();
                 Task.Delay(5000).Wait();
             }
@@ -47,9 +48,9 @@ namespace IntegrationIsycase
             {
                 if (device.Value.Value == "off")
                 {
-                    if (!deviceStatus.ContainsKey(device.Id) || deviceStatus[device.Id] == "on")
+                    if (deviceStatus.ContainsKey(device.Id) && deviceStatus[device.Id] == "on")
                     {
-                        Console.WriteLine("Skicka felrapport för " + device.Id);
+                        Console.WriteLine("Sending alert for device " + device.Id);
                         await PostAlert(device, alertUrl, apiKey);
                     }
                 }
@@ -59,6 +60,7 @@ namespace IntegrationIsycase
 
         private static async Task PostAlert(Device device, string alertUrl, string apiKey)
         {
+            // TODO: Read the location from the device
             var alert = new AlertMissingLifebuoy(device.Id, 17.320790, 62.389976);
 
             var settings = new JsonSerializerSettings
@@ -69,8 +71,6 @@ namespace IntegrationIsycase
 
             var json = JsonConvert.SerializeObject(alert, settings);
             var data = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
-
-            Console.WriteLine(json);
 
             var formContent = new FormUrlEncodedContent(new[]
             {
