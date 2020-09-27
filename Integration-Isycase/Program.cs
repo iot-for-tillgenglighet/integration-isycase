@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using System.Timers;
 using DeviceClass;
-using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Serialization;
-using IntegrationIsycase;
 
 namespace IntegrationIsycase
 {
