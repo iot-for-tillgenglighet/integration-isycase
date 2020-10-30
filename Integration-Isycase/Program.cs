@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using DeviceClass;
+using Fiware;
 using System.Text;
 using Newtonsoft.Json.Serialization;
 
@@ -48,11 +48,30 @@ namespace IntegrationIsycase
                     if (deviceStatus.ContainsKey(device.Id) && deviceStatus[device.Id] == "on")
                     {
                         Console.WriteLine("Sending alert for device " + device.Id);
-                        await PostAlert(device, alertUrl, apiKey);
+                        await PostLifebuoyServiceRequest(device, alertUrl, apiKey);
                     }
                 }
                 deviceStatus[device.Id] = device.Value.Value;
             }
+        }
+
+        private static async Task PostLifebuoyServiceRequest(Device device, string requestUrl, string apiKey) {
+            var serviceRequest = new LifebuoyServiceRequest(device.Id, 17.320790, 62.389976, 123456);
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            var json = JsonConvert.SerializeObject(serviceRequest, settings);
+            var data = new StringContent(json, Encoding.UTF8, "application/ld+json");
+
+            var response = await client.PostAsync(requestUrl, data);
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(json);
+            //Console.WriteLine(response.StatusCode + ": " + stringContent);
         }
 
         private static async Task PostAlert(Device device, string alertUrl, string apiKey)

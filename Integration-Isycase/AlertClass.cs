@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace IntegrationIsycase
+namespace Fiware
 {
     public class AlertClass
     {
@@ -43,51 +43,4 @@ namespace IntegrationIsycase
         }
 
     }
-
-    public class TextProperty
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-        [JsonProperty("value")]
-        public string Value { get; set; }
-
-        public TextProperty(string value)
-        {
-            Type = "Property";
-            Value = value;
-        }
-    }
-
-    public class GeoProperty
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("value")]
-        public GeoPropertyValue Value { get; set; }
-
-        public GeoProperty(double latitude, double longitude)
-        {
-            Type = "GeoProperty";
-            Value = new GeoPropertyValue(latitude, longitude);
-        }
-
-    }
-
-    public class GeoPropertyValue
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("coordinates")]
-        public double[] Coordinates { get; set; }
-
-        public GeoPropertyValue(double latitude, double longitude)
-        {
-            Type = "Point";
-            Coordinates = new double[2] { latitude, longitude };
-        }
-
-    }
-
 }

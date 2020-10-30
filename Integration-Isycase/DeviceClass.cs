@@ -1,4 +1,4 @@
-﻿namespace DeviceClass
+﻿namespace Fiware
 {
     using System;
     using System.Globalization;
@@ -31,12 +31,12 @@
 
     public partial class Device
     {
-        public static Device[] FromJson(string json) => JsonConvert.DeserializeObject<Device[]>(json, DeviceClass.Converter.Settings);
+        public static Device[] FromJson(string json) => JsonConvert.DeserializeObject<Device[]>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this Device[] self) => JsonConvert.SerializeObject(self, DeviceClass.Converter.Settings);
+        public static string ToJson(this Device[] self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter
