@@ -67,6 +67,8 @@ namespace IntegrationIsycase
             var json = JsonConvert.SerializeObject(serviceRequest, settings);
             var data = new StringContent(json, Encoding.UTF8, "application/ld+json");
 
+            data.Headers.Add("X-API-KEY", apiKey);
+
             var response = await client.PostAsync(requestUrl, data);
             var stringContent = await response.Content.ReadAsStringAsync();
 
